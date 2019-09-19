@@ -1,6 +1,4 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Data.Linq.Mapping;
 
 namespace VIROLeaderboardBot.Discord.Database
@@ -12,8 +10,23 @@ namespace VIROLeaderboardBot.Discord.Database
         [Key]
         public long ID { get; set; }
 
+        [Column(Name = "Ranking")]
+        public int Ranking { get; set; }
+
+        [Column(Name = "PlayerName")]
+        public string PlayerName { get; set; }
+
         [Column(Name = "PlayerId")]
-        public long PlayerId { get; set; }
+        public string PlayerId{ get; set; }
+
+        [Column(Name = "Points")]
+        public int Points { get; set; }
+
+        [Column(Name = "GameType")]
+        public int GameType { get; set; }
+
+        [Column(Name = "Timestamp")]
+        public long Timestamp { get; set; }
 
         [Column(Name = "Old")]
         public bool Old { get; set; }

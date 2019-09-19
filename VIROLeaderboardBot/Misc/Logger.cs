@@ -40,7 +40,7 @@ namespace VIROLeaderboardBot.Misc
 
         public static void Debug(string message)
         {
-#if BETA
+#if DEBUG
             ConsoleColor originalColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(prefix + message);

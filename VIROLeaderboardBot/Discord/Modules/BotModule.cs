@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VIROLeaderboardBot.Discord.Modules
 {
-    class BotModule : ModuleBase<SocketCommandContext>
+    public class BotModule : ModuleBase<SocketCommandContext>
     {
         public DatabaseService DatabaseService { get; set; }
         public LeaderboardService LeaderboardService { get; set; }
@@ -79,13 +79,27 @@ namespace VIROLeaderboardBot.Discord.Modules
             }
         }
 
+        [Command("overall")]
+        [Summary("Shows the current overall standings")]
+        public async Task Overall()
+        {
+            var standings = await LeaderboardService.GetOverallStandings();
+            string reply = "Current Overall Standings:\n\n";
+
+            foreach (var standing in standings)
+            {
+                reply += $"{standing.Ranking}:\t{standing.PlayerName}\t({standing.Points})\n";
+            }
+            await ReplyAsync(reply);
+        }
+
         [Command("poll")]
         [Summary("Triggers a manual polling of the scores site")]
         public async Task Poll()
         {
             if (IsAdmin())
             {
-                LeaderboardService.Poll();
+                await LeaderboardService.Poll();
             }
         }
     }

@@ -17,22 +17,20 @@ namespace VIROLeaderboardBot.Discord
         private static IServiceProvider _services;
         private static string _serverName;
         private static ulong _scoreChannel;
-        private static string _voteChannel;
         private static string _databaseLocation;
 
-        public static void Start(string serverName, ulong scoreChannel, string voteChannel, string databaseLocation = "botDatabase.db")
+        public static void Start(string serverName, ulong scoreChannel, string databaseLocation = "botDatabase.db")
         {
             _serverName = serverName;
             _scoreChannel = scoreChannel;
-            _voteChannel = voteChannel;
             _databaseLocation = databaseLocation;
             MainAsync().GetAwaiter().GetResult();
         }
 
-        public static void SendToScoreChannel(string message)
+        public static async Task SendToScoreChannel(string message)
         {
             var guild = _client.Guilds.ToList().Where(x => x.Name.Contains(_serverName)).First();
-            guild.GetTextChannel(_scoreChannel).SendMessageAsync(message);
+            await guild.GetTextChannel(_scoreChannel).SendMessageAsync(message);
         }
 
         public static async Task MainAsync()
@@ -52,7 +50,7 @@ namespace VIROLeaderboardBot.Discord
             await _client.StartAsync();
             await _services.GetRequiredService<CommandHandlingService>().InitializeAsync();
 
-            //_services.GetRequiredService<LeaderboardService>().StartPolling(60 * 1000);
+            _services.GetRequiredService<LeaderboardService>().StartPolling(5 * 60 * 1000);
         }
 
         public static IServiceProvider GetServices() => _services;
@@ -72,6 +70,7 @@ namespace VIROLeaderboardBot.Discord
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<HttpClient>()
+                .AddSingleton<LeaderboardService>()
                 .AddSingleton(serviceProvider => new DatabaseService(_databaseLocation, serviceProvider))
                 .BuildServiceProvider();
         }
